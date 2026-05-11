@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>La Matanza Road Fighter</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+
+<style>
+body {
+  margin:0;
+  background:#020617;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+
+canvas {
+  border:2px solid #22d3ee;
+  border-radius:10px;
+  background:black;
+  width:100vw;
+  height:80vh;
+  max-width:400px;
+}
+
+#menu, #gameover {
+  position:absolute;
+  top:35%;
+  width:100%;
+}
+
+button {
+  padding:12px 20px;
+  font-size:18px;
+}
+
+#mobileControls {
+  position:absolute;
+  bottom:10px;
+  width:100%;
+}
+
+.ctrl {
+  width:80px;
+  height:80px;
+  background:#22d3ee55;
+  display:inline-block;
+  margin:10px;
+  line-height:80px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🚗 La Matanza Road Fighter</h2>
+
+<div id="menu">
+  <button onclick="startGame()">JUGAR</button>
+</div>
+
+<div id="gameover" style="display:none;">
+  <h2 id="finalText"></h2>
+  <button onclick="startGame()">REINTENTAR</button>
+</div>
+
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+
+<div id="mobileControls">
+  <div class="ctrl" ontouchstart="keys.left=true" ontouchend="keys.left=false">⬅</div>
+  <div class="ctrl" ontouchstart="keys.right=true" ontouchend="keys.right=false">➡</div>
+</div>
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let gameRunning=false,gameOver=false;
+
+// AUDIO
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let engine;
+
+function startEngine(){
+  engine = audioCtx.createOscillator();
+  let gain = audioCtx.createGain();
+
+  engine.type = "sawtooth";
+  engine.frequency.value = 120;
+
+  engine.connect(gain);
+  gain.connect(audioCtx.destination);
+  gain.gain.value = 0.05;
+
+  engine.start();
+}
+
+function updateEngine(){
+  if(engine){
+    engine.frequency.value = 100 + (level * 20);
+  }
+}
+
+// INPUT
+let keys={left:false,right:false};
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="ArrowLeft") keys.left=true;
+ if(e.key==="ArrowRight") keys.right=true;
+});
+document.addEventListener("keyup",e=>{
+ if(e.key==="ArrowLeft") keys.left=false;
+ if(e.key==="ArrowRight") keys.right=false;
+});
+
+// NIVELES
+const levels=[
+ {name:"Ramos Mejía",speed:2,traffic:2},
+ {name:"San Justo",speed:3,traffic:3},
+ {name:"Laferrere",speed:4,traffic:4},
+ {name:"Catán",speed:5,traffic:5,rain:true},
+ {name:"Virrey del Pino",speed:6,traffic:6,night:true}
+];
+
+// LINEAS DE COLECTIVOS
+const busLines = {
+ 1:["620","621","88"],
+ 2:["55","88","620"],
+ 3:["622","630","86"],
+ 4:["180","193","205"],
+ 5:["621","622","86"]
+};
+
+let player,enemies,fuelItems,score,level,roadOffset,highScore;
+
+// INIT
+function startGame(){
+ player={x:180,y:500,w:26,h:48,fuel:100};
+ enemies=[]; fuelItems=[];
+ score=0; level=1; roadOffset=0;
+
+ gameRunning=true; gameOver=false;
+
+ document.getElementById("menu").style.display="none";
+ document.getElementById("gameover").style.display="none";
+
+ highScore=localStorage.getItem("highScore")||0;
+
+ startEngine();
+}
+
+// SPAWN
+function spawnEnemy(){
+ enemies.push({x:Math.random()*360,y:-60,w:26,h:48});
+}
+
+function spawnBus(){
+ const lines = busLines[level];
+ enemies.push({
+  x:Math.random()*340,y:-80,w:40,h:70,
+  type:"bus",
+  line:lines[Math.floor(Math.random()*lines.length)]
+ });
+}
+
+function spawnFuel(){
+ fuelItems.push({x:Math.random()*360,y:-40,w:16,h:16});
+}
+
+// COLLISION
+function hit(a,b){
+ return a.x < b.x + b.w &&
+        a.x + a.w > b.x &&
+        a.y < b.y + b.h &&
+        a.y + a.h > b.y;
+}
+
+// UPDATE
+function update(){
+ if(!gameRunning||gameOver)return;
+
+ let lvl=levels[level-1];
+
+ if(keys.left) player.x-=5;
+ if(keys.right) player.x+=5;
+ player.x=Math.max(10,Math.min(364,player.x));
+
+ player.fuel-=0.04;
+ if(player.fuel<=0) endGame("⛽ Sin combustible");
+
+ enemies.forEach(e=>e.y+=lvl.speed);
+ fuelItems.forEach(f=>f.y+=lvl.speed);
+
+ if(Math.random()<0.03*lvl.traffic){
+   if(Math.random()<0.3) spawnBus();
+   else spawnEnemy();
+ }
+
+ if(Math.random()<0.01) spawnFuel();
+
+ enemies.forEach(e=>{
+   if(hit(player,e)) endGame("💥 Choque");
+ });
+
+ fuelItems.forEach((f,i)=>{
+   if(hit(player,f)){
+     player.fuel=Math.min(100,player.fuel+30);
+     fuelItems.splice(i,1);
+   }
+ });
+
+ enemies=enemies.filter(e=>e.y<600);
+ fuelItems=fuelItems.filter(f=>f.y<600);
+
+ score++;
+ if(score%1500===0 && level<5) level++;
+
+ roadOffset+=lvl.speed;
+ updateEngine();
+}
+
+// GAME OVER
+function endGame(msg){
+ gameOver=true;
+ gameRunning=false;
+
+ if(score>highScore){
+   localStorage.setItem("highScore",score);
+ }
+
+ document.getElementById("finalText").innerText=
+ msg+" | Puntos: "+score+" | Record: "+(localStorage.getItem("highScore")||0);
+
+ document.getElementById("gameover").style.display="block";
+}
+
+// DRAW
+function drawCar(x,y,color){
+ ctx.fillStyle=color;
+ ctx.fillRect(x,y,26,48);
+
+ ctx.fillStyle="#000";
+ ctx.fillRect(x+6,y+8,14,12);
+}
+
+function drawBus(e){
+ ctx.fillStyle="#f97316";
+ ctx.fillRect(e.x,e.y,e.w,e.h);
+
+ ctx.fillStyle="#1e293b";
+ ctx.fillRect(e.x+5,e.y+10,e.w-10,20);
+
+ ctx.fillStyle="white";
+ ctx.fillText(e.line,e.x+8,e.y+50);
+}
+
+function draw(){
+ ctx.fillStyle="#111";
+ ctx.fillRect(0,0,400,600);
+
+ ctx.strokeStyle="white";
+ ctx.setLineDash([20,20]);
+ ctx.lineDashOffset=-roadOffset;
+
+ [133,266].forEach(x=>{
+   ctx.beginPath();
+   ctx.moveTo(x,0);
+   ctx.lineTo(x,600);
+   ctx.stroke();
+ });
+
+ ctx.setLineDash([]);
+
+ drawCar(player.x,player.y,"#22d3ee");
+
+ enemies.forEach(e=>{
+   if(e.type==="bus") drawBus(e);
+   else drawCar(e.x,e.y,"red");
+ });
+
+ fuelItems.forEach(f=>{
+   ctx.fillStyle="yellow";
+   ctx.fillRect(f.x,f.y,16,16);
+ });
+
+ if(levels[level-1].rain){
+   for(let i=0;i<30;i++){
+     ctx.fillRect(Math.random()*400,Math.random()*600,2,8);
+   }
+ }
+
+ if(levels[level-1].night){
+   ctx.fillStyle="rgba(0,0,0,0.5)";
+   ctx.fillRect(0,0,400,600);
+ }
+
+ ctx.fillStyle="white";
+ ctx.fillText("Nivel: "+levels[level-1].name,10,20);
+ ctx.fillText("Puntos: "+score,10,40);
+
+ ctx.fillStyle="gray";
+ ctx.fillRect(10,50,100,10);
+ ctx.fillStyle="lime";
+ ctx.fillRect(10,50,player.fuel,10);
+}
+
+// LOOP
+function loop(){
+ update();
+ if(player) draw();
+ requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+
+</body>
+</html>
+
