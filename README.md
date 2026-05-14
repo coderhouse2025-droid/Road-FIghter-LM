@@ -1,2 +1,30 @@
-# Road-FIghter - Producción 
-<img width="1122" height="1402" alt="Banner del Juego" src="https://github.com/user-attachments/assets/345cccd1-ee86-4f08-8676-4466f3d56d4c" />
+
+# La Matanza Road Fighter
+
+Juego retro inspirado en Road Fighter de Konami.
+
+## Características
+
+- Compatible con notebook y celular
+- PWA instalable
+- Controles táctiles
+- Curvas dinámicas
+- Perspectiva arcade
+- Escalado estilo 8bit
+- GitHub Pages Ready
+
+## Publicación en GitHub
+
+1. Crear repositorio
+2. Subir archivos
+3. Ir a Settings > Pages
+4. Deploy from branch
+5. Seleccionar main/root
+
+## Estructura
+
+/index.html
+/style.css
+/js/game.js
+/sw.js
+/manifest.json
