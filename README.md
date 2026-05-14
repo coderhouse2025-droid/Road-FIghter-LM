@@ -1,4 +1,4 @@
-# La Matanza Road Fighter v2
+# La Matanza Road Fighter
 
 Arcade completo estilo Konami 1984 — versión mejorada.
 
