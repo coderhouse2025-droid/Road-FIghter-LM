@@ -1,4 +1,5 @@
 # La Matanza Road Fighter
+<img width="1122" height="1402" alt="Banner del Juego" src="https://github.com/user-attachments/assets/c109b1a0-c3c9-446d-bf8b-1b6e40adfebd" />
 
 Arcade completo estilo Konami 1984 — versión mejorada.
 
