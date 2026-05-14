@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>La Matanza Road Fighter</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game"></canvas>
+
+  <div id="hud">
+    <div class="title">1P</div>
+    <div class="score" id="score">000000</div>
+
+    <div class="label">KM/H</div>
+    <div id="speed">0</div>
+
+    <div class="label">FUEL</div>
+    <div id="fuel">100</div>
+
+    <div class="label">ZONE</div>
+    <div id="zone">LA MATANZA</div>
+  </div>
+</div>
+
+<div id="mobile">
+  <button id="left">◀</button>
+  <button id="right">▶</button>
+</div>
+
+<script src="js/game.js"></script>
+</body>
+</html>
