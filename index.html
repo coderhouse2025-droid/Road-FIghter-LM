@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
+<title>La Matanza Road Fighter</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="wrap">
+  <canvas id="game"></canvas>
+  <div id="hud">
+    <div class="hud-logo">1P</div>
+    <div class="hud-row"><span class="lbl">SCORE</span></div>
+    <div class="score" id="score">000000</div>
+    <div class="hud-row"><span class="lbl">HI-SCORE</span></div>
+    <div class="score" id="hiscore">000000</div>
+    <div class="hud-sep"></div>
+    <div class="hud-row"><span class="lbl">KM/H</span></div>
+    <div class="hud-val" id="speed">0</div>
+    <div class="hud-row"><span class="lbl">FUEL</span></div>
+    <div id="fuelbar"><div id="fuelinner"></div></div>
+    <div class="hud-val" id="fuelnum">100</div>
+    <div class="hud-sep"></div>
+    <div class="hud-row"><span class="lbl">ZONE</span></div>
+    <div class="hud-zone" id="zone">LA MATANZA</div>
+    <div class="hud-sep"></div>
+    <div class="hud-row"><span class="lbl">LIVES</span></div>
+    <div id="lives"></div>
+  </div>
+</div>
+<div id="mobile">
+  <button id="btnLeft" ontouchstart="mobileBtn('left',true)" ontouchend="mobileBtn('left',false)">◀</button>
+  <button id="btnRight" ontouchstart="mobileBtn('right',true)" ontouchend="mobileBtn('right',false)">▶</button>
+</div>
+<script src="js/audio.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
