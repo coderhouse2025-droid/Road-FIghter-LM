@@ -76,14 +76,10 @@ No requiere build, ni `npm install`, ni servidor: es un único archivo `index.ht
 ## 🚀 Cómo correrlo localmente
 
 ```bash
-git clone https://github.com/coderhouse2025-droid/Portafolio-JM.git
-cd Portafolio-JM
+git clone https://coderhouse2025-droid.github.io/Road-FIghter-LM/
 # abrí index.html directamente en el navegador, o serví la carpeta con cualquier servidor estático:
 python3 -m http.server 8080
 ```
-
-Luego entrá a `http://localhost:8080` desde el navegador.
-
 ## 📂 Estructura del proyecto
 
 ```
