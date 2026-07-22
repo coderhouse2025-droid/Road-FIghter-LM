@@ -16,7 +16,7 @@ Este proyecto nació como un ejercicio personal para combinar dos cosas que me g
 
 Elegí **Road Fighter** como base porque es un juego simple de entender (esquivar tráfico, no quedarse sin combustible, llegar a la meta) pero con mucho margen para agregarle capas de complejidad: niveles con dificultad progresiva, curvas de camino, daño acumulado en la carrocería, un sistema de power-ups y una estética propia.
 
-La decisión de ambientarlo en **La Matanza** —recorriendo Ramos Mejía, San Justo, Lomas del Mirador, Casanova y Gregorio de Laferrere— surgió para darle identidad local al proyecto en lugar de una pista genérica, y la protagonista (Isis, la gata piloto) es un guiño personal que le da carácter al juego más allá de la mecánica.
+La decisión de ambientarlo en **La Matanza** —recorriendo Ramos Mejía, San Justo, Lomas del Mirador, Isidro Casanova y Gregorio de Laferrere— surgió para darle identidad local al proyecto en lugar de una pista genérica, y la protagonista (Isis, la gata piloto) es un guiño personal que le da carácter al juego más allá de la mecánica.
 
 Más que un clon, la idea fue usar el formato del juego original como excusa para practicar:
 - Programación de un game loop completo (estado, física simple, colisiones, HUD).
