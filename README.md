@@ -41,7 +41,7 @@ Isis maneja un Fórmula 1 rosa (con el número **31**) y tiene que atravesar 5 b
 | 1 | Ramos Mejía                | Introductorio |
 | 2 | San Justo                   | Fácil |
 | 3 | Lomas del Mirador            | Media |
-| 4 | Casanova                    | Alta |
+| 4 | Isidro Casanova                    | Alta |
 | 5 | Gregorio de Laferrere        | Máxima |
 
 ### Tráfico y eventos especiales
